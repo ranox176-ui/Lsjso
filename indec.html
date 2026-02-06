@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Special For You ❤️</title>
+<style>
+body{
+  font-family:sans-serif;
+  text-align:center;
+  background:linear-gradient(#ff9a9e,#fad0c4);
+  margin:0;
+  overflow:hidden;
+}
+button{
+  padding:12px 25px;
+  font-size:18px;
+  border:none;
+  border-radius:10px;
+  margin:10px;
+  cursor:pointer;
+  transition:0.3s;
+}
+#no{position:absolute; right:20px; top:50px;}
+.hidden{display:none;}
+canvas{background:#87ceeb;}
+.final-photos img{
+  width:150px;
+  margin:10px;
+  transform: rotate(0deg);
+  transition:0.3s;
+  display:inline-block;
+}
+.final-photos img:nth-child(1){ transform: rotate(-10deg); }
+.final-photos img:nth-child(2){ transform: rotate(8deg); }
+.final-photos img:nth-child(3){ transform: rotate(-5deg); }
+</style>
+</head>
+<body>
+
+<!-- PAGE 1 -->
+<div id="page1">
+<h1>Do You Like Me? ❤️</h1>
+<button id="yes">YES 😍</button>
+<button id="no">NO 😜</button>
+</div>
+
+<!-- PAGE 2 -->
+<div id="page2" class="hidden">
+<h1>❤️</h1>
+<h2>
+Tum muskurate ho to duniya achhi lagti hai.....<br>
+“Tumse baat na ho to din adhura sa lagta hai,<br>
+Aur jab baat ho jaye to waqt chhota sa lagta hai..<br>
+Har khushi tumhare kadmon ki pehchaan rahe.<br>
+Tumhare sapne hamesha sach hote rahein,<br>
+Aur chehre par hamesha muskaan raheeeeeeee.<br><br>
+Na chaand ki chahat, na sitaron ki farmaish tuuuu h na kafi hai mujhe 💗”
+</h2>
+<button onclick="startGame()">Magic Button ✨</button>
+</div>
+
+<!-- GAME PAGE -->
+<div id="gamePage" class="hidden">
+<h2>Balloon Shoot Game 🎈</h2>
+<canvas id="game" width="300" height="400"></canvas>
+<h3 id="score">Score:0</h3>
+</div>
+
+<!-- FINAL PAGE -->
+<div id="finalPage" class="hidden">
+<h1>💖</h1>
+<h2>
+AWWWWWW MY GARIMA🩷<br>
+WISH YOU A VERY VERYYYY VERYYYYYYYYYY HAPPY BIRTHDAY 💗<br>
+ALWAYS BEING MINE 🫡💕
+</h2>
+<div class="final-photos">
+  <img src="https://i.ibb.co/d06FWYGz/IMG-20260202-081708-706.jpg" alt="photo1">
+  <img src="https://i.ibb.co/9HfCs9Zg/IMG-20260204-132516-507.jpg" alt="photo2">
+  <img src="https://i.ibb.co/0V8mFFv3/IMG-20260204-132527-398.jpg" alt="photo3">
+</div>
+</div>
+
+<script>
+let page1=document.getElementById("page1");
+let page2=document.getElementById("page2");
+let gamePage=document.getElementById("gamePage");
+let finalPage=document.getElementById("finalPage");
+let yesBtn=document.getElementById("yes");
+let noBtn=document.getElementById("no");
+let clickCount=0;
+let maxClicks=8;
+
+// PAGE1 YES/NO behavior
+noBtn.onclick=function(){
+  clickCount++;
+  // YES बड़ा करें
+  let newFont = 18 + clickCount*3; // increase font
+  let newPadding = 12 + clickCount*2; 
+  yesBtn.style.fontSize=newFont+"px";
+  yesBtn.style.padding=newPadding+"px "+(25+clickCount*2)+"px";
+  // NO छोटा करें
+  let noFont = 18 - clickCount*1.5;
+  let noPadding = 12 - clickCount*1;
+  noBtn.style.fontSize=noFont+"px";
+  noBtn.style.padding=noPadding+"px "+(25- clickCount*1.5)+"px";
+  if(clickCount>=maxClicks){
+    // NO को YES के नीचे shift करें
+    noBtn.style.position="static";
+    noBtn.style.display="inline-block";
+  }
+}
+
+yesBtn.onclick=function(){
+  page1.classList.add("hidden");
+  page2.classList.remove("hidden");
+}
+
+// MAGIC BUTTON → START GAME
+function startGame(){
+  page2.classList.add("hidden");
+  gamePage.classList.remove("hidden");
+  startBalloonGame();
+}
+
+// GAME LOGIC
+let canvas=document.getElementById("game");
+let ctx=canvas.getContext("2d");
+let balloons=[];
+let score=0;
+
+function startBalloonGame(){
+  let balloonInterval=setInterval(()=>{
+    balloons.push({x:Math.random()*260,y:400});
+  },800);
+
+  canvas.onclick=(e)=>{
+    balloons.forEach((b,i)=>{
+      if(e.offsetX>b.x && e.offsetX<b.x+40 && e.offsetY>b.y && e.offsetY<b.y+50){
+        balloons.splice(i,1);
+        score++;
+        document.getElementById("score").innerText="Score:"+score;
+        if(score>=3){
+          clearInterval(balloonInterval);
+          showFinal();
+        }
+      }
+    });
+  }
+
+  setInterval(()=>{
+    ctx.clearRect(0,0,300,400);
+    ctx.fillStyle="red";
+    balloons.forEach(b=>{
+      b.y-=2;
+      ctx.fillRect(b.x,b.y,40,50);
+    });
+  },30);
+}
+
+// SHOW FINAL PAGE
+function showFinal(){
+  gamePage.classList.add("hidden");
+  finalPage.classList.remove("hidden");
+}
+</script>
+
+</body>
+</html>
